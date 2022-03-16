@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/16 20:50:27 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/16 20:53:51 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ void	validate_argc(int	argc)
 	}
 }
 
-int	is_digit(char	c)
+int	is_digit(int	c)
 {
-	if ((int)c >= 48 || (int)c <= 57)
+	if (c >= 48 && c <= 57)
 		return (1);
 	return (0);
 }
