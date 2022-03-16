@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/16 20:16:00 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/16 20:50:27 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,30 @@ typedef	struct s_philo_thread
 /*
 	1000 microsecond = 1 milisecond
 */
+
+void	ft_bzero(void *s, size_t n)
+{
+	char	*p;
+
+	p = (char *)s;
+	while (n > 0)
+	{
+		*(p + --n) = (char)0;
+	}
+}
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*ptr;
+
+	ptr = malloc(count * size);
+	if (ptr)
+	{
+		ft_bzero(ptr, count * size);
+		return (ptr);
+	}
+	return (0);
+}
 
 void	validate_argc(int	argc)
 {
@@ -73,6 +97,7 @@ void	validate_argv(char **argv)
 		i++;
 	}
 }
+
 /*
 unsigned int	tenth_power(unsigned int pow)
 {
@@ -111,8 +136,16 @@ unsigned int	str_to_uint(char *str)
 int	*parse_params(int	argc, char *argv[])
 {
 	int	*i_argv;
+	int	i;
 
-
+	i_argv = ft_calloc(argc - 1, sizeof(unsigned int));
+	i = 0;
+	while(i < argc - 1)
+	{
+		i_argv[i] = str_to_uint(*(argv + i));
+		i++;
+	}
+	return (i_argv);
 }
 
 int	main(int	argc, char	*argv[])
@@ -121,5 +154,6 @@ int	main(int	argc, char	*argv[])
 
 	validate_argc(argc);
 	validate_argv(argv);
+	i_argv = parse_params(argc, argv + 1);
 	return (0);
 }
