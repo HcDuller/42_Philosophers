@@ -6,60 +6,15 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/17 14:43:20 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/17 20:21:49 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <pthread.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h> //memset
+#include <philosophers.h>
 
-typedef	struct s_philo
-{
-	pthread_t		thread;
-	int				phi_id;
-	unsigned int	starv_time_ms;
-	unsigned int	sleep_time_ms;
-	unsigned int	eat_time_ms;
-	unsigned int	able_to_eat;
-} t_philo;
-
-typedef struct s_table
-{
-	int				n_philosophers;
-	int				*forks;
-	int				dead_philos;
-	t_philo			*philosophers;
-} t_table;
 /*
 	1000 microsecond = 1 milisecond
 */
-
-void	ft_bzero(void *s, size_t n)
-{
-	char	*p;
-
-	p = (char *)s;
-	while (n > 0)
-	{
-		*(p + --n) = (char)0;
-	}
-}
-
-void	*ft_calloc(size_t count, size_t size)
-{
-	void	*ptr;
-
-	ptr = malloc(count * size);
-	if (ptr)
-	{
-		ft_bzero(ptr, count * size);
-		return (ptr);
-	}
-	return (0);
-}
 
 void	validate_argc(int	argc)
 {
@@ -126,27 +81,80 @@ unsigned int	str_to_uint(char *str)
 	return (value);
 }
 
-void	*parse_params(int	argc, char *argv[], int	*i_args)
+void	parse_params(int	argc, char *argv[], unsigned int	*i_args)
 {
-	int	i;
+	unsigned int	i;
+	unsigned int	u_argc;
 
+	u_argc = (unsigned int)argc - 1;
 	ft_bzero(i_args, 5 * sizeof(unsigned int));
 	i = 0;
-	while(i < argc - 1)
+	while(i < u_argc)
 	{
 		i_args[i] = str_to_uint(*(argv + i));
 		i++;
 	}
 }
 
-void	alloc_table(t_table	*table, int *args)
+void	alloc_table(t_table	*table, unsigned int *args)
 {
-	int	i;
+	int	p_count;
 
 	table->n_philosophers = args[0];
-	table->forks = ft_calloc(args[0], sizeof(int));
+	table->starv_time_ms = args[1];
+	table->eat_time_ms = args[2];
+	table->sleep_time_ms = args[3];
+	table->forks = ft_calloc(args[0], sizeof(pthread_mutex_t));
 	table->philosophers = ft_calloc(args[0], sizeof(t_philo));
-	
+	p_count = 0;
+	while (p_count < table->n_philosophers)
+	{
+		if (pthread_mutex_init( table->forks + p_count, NULL))
+		{
+			write(STDERR_FILENO, "Error: could not create mutex.\n", 31);
+			exit(EXIT_FAILURE);
+		}
+		p_count++;
+	}
+}
+
+void	free_table(t_table *table)
+{
+	int	p_count;
+
+	p_count = 0;
+	free(table->philosophers);
+	while (p_count < table->n_philosophers)
+	{
+		pthread_mutex_destroy(table->forks + p_count);
+	}
+	free(table->forks);
+}
+
+void	start_philosophers(t_table *table)
+{
+	int		p_count;
+	t_philo	*philo;
+
+	p_count = 0;
+	while (p_count < table->n_philosophers)
+	{
+		philo = table->philosophers + p_count;
+		philo->vector_id = p_count;
+		philo->str_id = ft_itoa(p_count);
+		philo->left_fork = table->forks + p_count;
+		if (p_count + 1 == table->n_philosophers)
+			philo->right_fork = table->forks;
+		else
+			philo->right_fork = table->forks + p_count + 1;
+		p_count++;
+	}
+	p_count = 0;
+	while (p_count < table->n_philosophers)
+	{
+		philo = table->philosophers;
+		p_count++;
+	}
 }
 
 int	main(int	argc, char	*argv[])
@@ -157,8 +165,8 @@ int	main(int	argc, char	*argv[])
 	validate_argc(argc);
 	validate_argv(argv);
 	parse_params(argc, argv + 1, args);
-	alloc_table(&table);
-	free_table();
-	start_philosophers(args);
+	alloc_table(&table, args);
+	start_philosophers(&table);
+	free_table(&table);
 	return (0);
 }
