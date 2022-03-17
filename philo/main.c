@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/17 20:21:49 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/17 20:45:32 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,14 +101,14 @@ void	alloc_table(t_table	*table, unsigned int *args)
 	int	p_count;
 
 	table->n_philosophers = args[0];
-	table->starv_time_ms = args[1];
-	table->eat_time_ms = args[2];
-	table->sleep_time_ms = args[3];
 	table->forks = ft_calloc(args[0], sizeof(pthread_mutex_t));
 	table->philosophers = ft_calloc(args[0], sizeof(t_philo));
 	p_count = 0;
 	while (p_count < table->n_philosophers)
 	{
+		(table->philosophers + p_count)->starv_time_ms = args[1];
+		(table->philosophers + p_count)->eat_time_ms = args[2];
+		(table->philosophers + p_count)->sleep_time_ms = args[3];
 		if (pthread_mutex_init( table->forks + p_count, NULL))
 		{
 			write(STDERR_FILENO, "Error: could not create mutex.\n", 31);
@@ -129,6 +129,29 @@ void	free_table(t_table *table)
 		pthread_mutex_destroy(table->forks + p_count);
 	}
 	free(table->forks);
+}
+
+void	eat_action(t_philo	*philosopher)
+{
+
+}
+void	sleep_action(t_philo	*philosopher)
+{
+	
+}
+
+void	*phi_thread(void *arg)
+{
+	t_philo	*philosopher;
+
+	philosopher = arg;
+	pthread_mutex_lock(&(philosopher->left_fork));
+	pthread_mutex_lock(&(philosopher->right_fork));
+	usleep(1000* philosopher->eat_time_ms);
+	pthread_mutex_unlock(&(philosopher->left_fork));
+	pthread_mutex_unlock(&(philosopher->right_fork));
+	usleep(1000* philosopher->sleep_time_ms);
+	return (NULL);
 }
 
 void	start_philosophers(t_table *table)
@@ -153,6 +176,7 @@ void	start_philosophers(t_table *table)
 	while (p_count < table->n_philosophers)
 	{
 		philo = table->philosophers;
+		if (pthread_create(&(philo->thread), NULL, philo))
 		p_count++;
 	}
 }
