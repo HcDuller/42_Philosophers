@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/16 20:53:51 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/17 14:43:20 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <string.h> //memset
 
-typedef	struct s_philo_thread
+typedef	struct s_philo
 {
 	pthread_t		thread;
 	int				phi_id;
@@ -24,8 +24,15 @@ typedef	struct s_philo_thread
 	unsigned int	sleep_time_ms;
 	unsigned int	eat_time_ms;
 	unsigned int	able_to_eat;
+} t_philo;
 
-} t_philo_thread;
+typedef struct s_table
+{
+	int				n_philosophers;
+	int				*forks;
+	int				dead_philos;
+	t_philo			*philosophers;
+} t_table;
 /*
 	1000 microsecond = 1 milisecond
 */
@@ -98,20 +105,6 @@ void	validate_argv(char **argv)
 	}
 }
 
-/*
-unsigned int	tenth_power(unsigned int pow)
-{
-	unsigned	int	final_value;
-
-	final_value = 1;
-	while (pow > 0)
-	{
-		final_value *= 10;
-		pow--;
-	}
-	return	(final_value);
-}
-*/
 unsigned int	str_to_uint(char *str)
 {
 	int	i;
@@ -133,27 +126,39 @@ unsigned int	str_to_uint(char *str)
 	return (value);
 }
 
-int	*parse_params(int	argc, char *argv[])
+void	*parse_params(int	argc, char *argv[], int	*i_args)
 {
-	int	*i_argv;
 	int	i;
 
-	i_argv = ft_calloc(argc - 1, sizeof(unsigned int));
+	ft_bzero(i_args, 5 * sizeof(unsigned int));
 	i = 0;
 	while(i < argc - 1)
 	{
-		i_argv[i] = str_to_uint(*(argv + i));
+		i_args[i] = str_to_uint(*(argv + i));
 		i++;
 	}
-	return (i_argv);
+}
+
+void	alloc_table(t_table	*table, int *args)
+{
+	int	i;
+
+	table->n_philosophers = args[0];
+	table->forks = ft_calloc(args[0], sizeof(int));
+	table->philosophers = ft_calloc(args[0], sizeof(t_philo));
+	
 }
 
 int	main(int	argc, char	*argv[])
 {
-	unsigned int	*i_argv;
+	unsigned int	args[5];
+	t_table			table;
 
 	validate_argc(argc);
 	validate_argv(argv);
-	i_argv = parse_params(argc, argv + 1);
+	parse_params(argc, argv + 1, args);
+	alloc_table(&table);
+	free_table();
+	start_philosophers(args);
 	return (0);
 }
