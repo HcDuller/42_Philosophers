@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/17 20:45:32 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/21 20:15:54 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void	alloc_table(t_table	*table, unsigned int *args)
 	table->n_philosophers = args[0];
 	table->forks = ft_calloc(args[0], sizeof(pthread_mutex_t));
 	table->philosophers = ft_calloc(args[0], sizeof(t_philo));
+	gettimeofday(&(table->base_time), NULL);
 	p_count = 0;
 	while (p_count < table->n_philosophers)
 	{
@@ -127,30 +128,55 @@ void	free_table(t_table *table)
 	while (p_count < table->n_philosophers)
 	{
 		pthread_mutex_destroy(table->forks + p_count);
+		p_count++;
 	}
 	free(table->forks);
 }
 
+void	pick_forks(t_philo	*philosopher)
+{
+	pthread_mutex_lock(philosopher->left_fork);
+	printf("%08ld	[%02d]	has taken a fork(left)\n", get_elapsed_ms(&(philosopher->base_time)), philosopher->vector_id);
+	pthread_mutex_lock(philosopher->right_fork);
+	printf("%08ld	[%02d]	has taken a fork(right)\n", get_elapsed_ms(&(philosopher->base_time)), philosopher->vector_id);
+}
+
+void	release_forks(t_philo	*philosopher)
+{
+	pthread_mutex_unlock(philosopher->left_fork);
+	printf("%08ld	[%02d]	released a fork(left)\n", get_elapsed_ms(&(philosopher->base_time)), philosopher->vector_id);
+	pthread_mutex_unlock(philosopher->right_fork);
+	printf("%08ld	[%02d]	released a fork(right)\n", get_elapsed_ms(&(philosopher->base_time)), philosopher->vector_id);
+}
+
 void	eat_action(t_philo	*philosopher)
 {
+	unsigned long	eat_time;
 
+	eat_time = get_elapsed_ms(&(philosopher->base_time));
+	printf("%08ld	[%02d]	is eating\n", eat_time, philosopher->vector_id);
+	gettimeofday(&philosopher->last_meal, NULL);
+	usleep(1000 * philosopher->eat_time_ms);
 }
+
 void	sleep_action(t_philo	*philosopher)
 {
-	
+	printf("%08ld	[%02d]	is sleeping\n", get_elapsed_ms(&(philosopher->base_time)), philosopher->vector_id);
+	usleep(1000 * philosopher->sleep_time_ms);
 }
 
 void	*phi_thread(void *arg)
 {
 	t_philo	*philosopher;
-
+	
 	philosopher = arg;
-	pthread_mutex_lock(&(philosopher->left_fork));
-	pthread_mutex_lock(&(philosopher->right_fork));
-	usleep(1000* philosopher->eat_time_ms);
-	pthread_mutex_unlock(&(philosopher->left_fork));
-	pthread_mutex_unlock(&(philosopher->right_fork));
-	usleep(1000* philosopher->sleep_time_ms);
+	while (1)
+	{
+		pick_forks(philosopher);
+		eat_action(philosopher);
+		release_forks(philosopher);
+		sleep_action(philosopher);
+	}
 	return (NULL);
 }
 
@@ -166,18 +192,82 @@ void	start_philosophers(t_table *table)
 		philo->vector_id = p_count;
 		philo->str_id = ft_itoa(p_count);
 		philo->left_fork = table->forks + p_count;
+		philo->last_meal = table->base_time;
+		philo->base_time = table->base_time;
 		if (p_count + 1 == table->n_philosophers)
 			philo->right_fork = table->forks;
 		else
 			philo->right_fork = table->forks + p_count + 1;
 		p_count++;
 	}
+	if (pthread_create(&(table->philosophers->thread), NULL, &phi_thread, (void *) table->philosophers))
+		exit(EXIT_FAILURE);
+	usleep(1000);
+	p_count = 1;
+	while (p_count < table->n_philosophers)
+	{
+		philo = table->philosophers + p_count;
+		if (pthread_create(&(philo->thread), NULL, &phi_thread, (void *) philo))
+			exit(EXIT_FAILURE);
+		p_count++;
+	}
+}
+
+void	wait_philosophers(t_table	*table)
+{
+	int		p_count;
+	t_philo	*philo;
+
 	p_count = 0;
 	while (p_count < table->n_philosophers)
 	{
-		philo = table->philosophers;
-		if (pthread_create(&(philo->thread), NULL, philo))
+		usleep(1000);
+		philo = table->philosophers + p_count;
+		if (pthread_join(philo->thread, NULL))
+			exit(EXIT_FAILURE);
 		p_count++;
+	}
+}
+
+void	check_starvation(t_philo	*philosopher)
+{
+	unsigned long int	elapsed_meal_time;
+
+
+	elapsed_meal_time = get_elapsed_ms(&philosopher->last_meal);
+	if (elapsed_meal_time > philosopher->starv_time_ms)
+	{
+		printf("%08ld	[%02d]	(starved for %08ldms) died\n", get_elapsed_ms(&(philosopher->base_time)), philosopher->vector_id, elapsed_meal_time);
+		exit(EXIT_FAILURE);
+	}
+}
+
+void	*overwatcher(void	*arg)
+{
+	t_table	*table;
+	int		p_counter;
+
+	table = (t_table *)arg;
+	while (1)
+	{
+		p_counter = 0;
+		while (p_counter < table->n_philosophers)
+		{
+			check_starvation(table->philosophers + p_counter);
+			p_counter++;
+		}
+	}
+	return (NULL);
+}
+
+void	start_watcher(t_table	*table)
+{
+	pthread_t	watcher;
+
+	if(pthread_create(&watcher,NULL, &overwatcher, (void *)table))
+	{
+		write(STDERR_FILENO,"Could not create overwatcher.\n",30);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -191,6 +281,8 @@ int	main(int	argc, char	*argv[])
 	parse_params(argc, argv + 1, args);
 	alloc_table(&table, args);
 	start_philosophers(&table);
+	start_watcher(&table);
+	wait_philosophers(&table);
 	free_table(&table);
 	return (0);
 }

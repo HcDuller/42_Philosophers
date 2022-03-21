@@ -5,7 +5,10 @@ CFLAGS		=	-Wall -Wextra -Werror -pthread -g
 
 SRC =	main.c \
 		ft_itoa.c \
-		ft_calloc_bzero.c
+		ft_calloc_bzero.c \
+		ft_strlen.c \
+		ft_strjoin.c \
+		time_management.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -20,10 +23,9 @@ $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@ -I ./
 
 clean:
-	@echo $(OBJ)
-	rm $(OBJ)
+	rm -rfd $(OBJ)
 
 fclean: clean
-	rm $(NAME)
+	rm -rfd $(NAME)
 
-re: all fclean
+re: fclean all
