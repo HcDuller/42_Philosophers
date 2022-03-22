@@ -12,7 +12,8 @@ RAW =	main.c \
 		phi_thread.c \
 		ft_strlen.c \
 		ft_strjoin.c \
-		time_management.c
+		time_management.c \
+		watcher.c
 
 SRC_DIR	= src
 OBJ_DIR	= obj
