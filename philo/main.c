@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/21 21:09:59 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/21 21:19:58 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,12 @@ void	alloc_table(t_table	*table, unsigned int *args)
 	table->n_philosophers = args[0];
 	table->forks = ft_calloc(args[0], sizeof(pthread_mutex_t));
 	table->philosophers = ft_calloc(args[0], sizeof(t_philo));
+	table->thread_counter = 0;
+	if (pthread_mutex_init( &table->self_lock, NULL))
+	{
+		write(STDERR_FILENO, "Error: could not create mutex.\n", 31);
+		exit(EXIT_FAILURE);
+	}
 	gettimeofday(&(table->base_time), NULL);
 	p_count = 0;
 	while (p_count < table->n_philosophers)
@@ -130,6 +136,7 @@ void	free_table(t_table *table)
 		pthread_mutex_destroy(table->forks + p_count);
 		p_count++;
 	}
+	pthread_mutex_destroy(&table->self_lock);
 	free(table->philosophers);
 	free(table->forks);
 }
@@ -205,7 +212,8 @@ void	start_philosophers(t_table *table)
 			philo->right_fork = table->forks + p_count + 1;
 		p_count++;
 	}
-	if (pthread_create(&(table->philosophers->thread), NULL, &phi_thread, (void *) table->philosophers))
+	philo = table->philosophers;
+	if (pthread_create(&(philo->thread), NULL, &phi_thread, (void *) table->philosophers))
 		exit(EXIT_FAILURE);
 	usleep(1000);
 	p_count = 1;
