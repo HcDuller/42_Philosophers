@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/21 23:49:16 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/21 23:53:11 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,6 @@ void	start_philosophers(t_table *table)
 	{
 		philo = table->philosophers + p_count;
 		philo->vector_id = p_count;
-		philo->str_id = ft_itoa(p_count);
 		philo->left_fork = table->forks + p_count;
 		philo->last_meal = table->base_time;
 		philo->base_time = table->base_time;

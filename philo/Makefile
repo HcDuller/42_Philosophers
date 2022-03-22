@@ -4,7 +4,6 @@ CC			=	cc
 CFLAGS		=	-Wall -Wextra -Werror -pthread -g
 
 SRC =	main.c \
-		ft_itoa.c \
 		ft_calloc_bzero.c \
 		ft_strlen.c \
 		ft_strjoin.c \
