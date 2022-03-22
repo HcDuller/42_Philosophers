@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/21 20:32:18 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/21 21:09:59 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,12 +124,13 @@ void	free_table(t_table *table)
 	int	p_count;
 
 	p_count = 0;
-	free(table->philosophers);
 	while (p_count < table->n_philosophers)
 	{
+		pthread_mutex_destroy(&(table->philosophers + p_count)->self_lock);
 		pthread_mutex_destroy(table->forks + p_count);
 		p_count++;
 	}
+	free(table->philosophers);
 	free(table->forks);
 }
 
