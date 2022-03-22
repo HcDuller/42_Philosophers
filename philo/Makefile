@@ -5,6 +5,11 @@ CFLAGS		=	-Wall -Wextra -Werror -pthread -g
 
 RAW =	main.c \
 		ft_calloc_bzero.c \
+		actions.c \
+		start_philosophers.c \
+		philosophers_are_dinning.c \
+		eval_input.c \
+		phi_thread.c \
 		ft_strlen.c \
 		ft_strjoin.c \
 		time_management.c
