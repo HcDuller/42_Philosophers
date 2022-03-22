@@ -3,22 +3,27 @@ NAME = philo
 CC			=	cc
 CFLAGS		=	-Wall -Wextra -Werror -pthread -g
 
-SRC =	main.c \
+RAW =	main.c \
 		ft_calloc_bzero.c \
 		ft_strlen.c \
 		ft_strjoin.c \
 		time_management.c
 
-OBJ = $(SRC:.c=.o)
+SRC_DIR	= src
+OBJ_DIR	= obj
 
-.PHONY: all clean fclean re
+SRC =	$(addprefix $(SRC_DIR)/,$(RAW))
+OBJ =	$(addprefix $(OBJ_DIR)/,$(RAW:.c=.o))
+
+
+.PHONY: all clean fclean re test
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -I ./
 
-./%.o: ./%.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@ -I ./
 
 clean:
