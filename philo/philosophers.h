@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 18:53:14 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/21 21:18:38 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/21 23:31:41 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef	struct s_philo
 {
 	pthread_t		thread;
 	int				vector_id;
+	int				meals_left;
 	char			*str_id;
 	struct	timeval	base_time;
 	struct	timeval	last_meal;
@@ -38,6 +39,7 @@ typedef struct s_table
 {
 	int					n_philosophers;
 	int					thread_counter;
+	int					still_dining;
 	pthread_mutex_t		self_lock;
 	pthread_mutex_t		*forks;
 	t_philo				*philosophers;

@@ -6,15 +6,11 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/21 21:19:58 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/21 23:49:16 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers.h>
-
-/*
-	1000 microsecond = 1 milisecond
-*/
 
 void	validate_argc(int	argc)
 {
@@ -104,6 +100,7 @@ void	alloc_table(t_table	*table, unsigned int *args)
 	table->forks = ft_calloc(args[0], sizeof(pthread_mutex_t));
 	table->philosophers = ft_calloc(args[0], sizeof(t_philo));
 	table->thread_counter = 0;
+	table->still_dining = 1;
 	if (pthread_mutex_init( &table->self_lock, NULL))
 	{
 		write(STDERR_FILENO, "Error: could not create mutex.\n", 31);
@@ -116,6 +113,10 @@ void	alloc_table(t_table	*table, unsigned int *args)
 		(table->philosophers + p_count)->starv_time_ms = args[1];
 		(table->philosophers + p_count)->eat_time_ms = args[2];
 		(table->philosophers + p_count)->sleep_time_ms = args[3];
+		if (args[4])
+			(table->philosophers + p_count)->meals_left = args[4];
+		else
+			(table->philosophers + p_count)->meals_left = -1;
 		if (pthread_mutex_init( table->forks + p_count, NULL))
 		{
 			write(STDERR_FILENO, "Error: could not create mutex.\n", 31);
@@ -161,8 +162,10 @@ void	eat_action(t_philo	*philosopher)
 {
 	unsigned long	eat_time;
 
+	if (philosopher->meals_left > 0)
+		philosopher->meals_left--;
 	eat_time = get_elapsed_ms(&(philosopher->base_time));
-	printf("%08ld	[%02d]	is eating\n", eat_time, philosopher->vector_id);
+	printf("%08ld	[%02d]	is eating (%02d meals left)\n", eat_time, philosopher->vector_id, philosopher->meals_left);
 	gettimeofday(&philosopher->last_meal, NULL);
 	usleep(1000 * philosopher->eat_time_ms);
 }
@@ -173,21 +176,70 @@ void	sleep_action(t_philo	*philosopher)
 	usleep(1000 * philosopher->sleep_time_ms);
 }
 
+void	think_action(t_philo	*philosopher)
+{
+	printf("%08ld	[%02d]	is thinking\n", get_elapsed_ms(&(philosopher->base_time)), philosopher->vector_id);
+}
+
+int		philosophers_are_dinning(t_table	*table)
+{
+	int	ok;
+	int	p_counter;
+	int	meals_left;
+
+	p_counter = 0;
+	pthread_mutex_lock(&table->self_lock);
+	ok = 0;
+	while (p_counter < table->n_philosophers)
+	{
+		meals_left = (table->philosophers + p_counter)->meals_left;
+		if (meals_left == -1 || meals_left > 0)
+			ok = 1;
+		p_counter++;
+	}
+	pthread_mutex_unlock(&table->self_lock);
+	return (ok);
+}
+
 void	*phi_thread(void *arg)
 {
 	t_philo	*philosopher;
+	t_table	*table;
 	
-	philosopher = arg;
-	while (1)
+	table = (t_table *)arg;
+	philosopher = table->philosophers + table->thread_counter;
+	table->thread_counter++;
+	pthread_mutex_unlock(&table->self_lock);
+	while (philosophers_are_dinning(table))
 	{
 		pthread_mutex_lock(&philosopher->self_lock);
-		pick_forks(philosopher);
-		eat_action(philosopher);
+		if (philosopher->meals_left != 0)
+		{
+			pick_forks(philosopher);
+			eat_action(philosopher);
+			release_forks(philosopher);
+			sleep_action(philosopher);
+			think_action(philosopher);
+			if (philosopher->meals_left == 0)
+			{
+				pthread_mutex_unlock(&philosopher->self_lock);
+				return (NULL);
+			}
+		}
 		pthread_mutex_unlock(&philosopher->self_lock);
-		release_forks(philosopher);
-		sleep_action(philosopher);
 	}
 	return (NULL);
+}
+
+int		keep_creating(t_table	*table)
+{
+	int	ok;
+
+	ok = 0;
+	pthread_mutex_lock(&table->self_lock);
+	ok = table->thread_counter < table->n_philosophers;
+	pthread_mutex_unlock(&table->self_lock);
+	return (ok);
 }
 
 void	start_philosophers(t_table *table)
@@ -213,16 +265,15 @@ void	start_philosophers(t_table *table)
 		p_count++;
 	}
 	philo = table->philosophers;
-	if (pthread_create(&(philo->thread), NULL, &phi_thread, (void *) table->philosophers))
+	if (pthread_create(&(philo->thread), NULL, &phi_thread, (void *) table))
 		exit(EXIT_FAILURE);
 	usleep(1000);
-	p_count = 1;
-	while (p_count < table->n_philosophers)
+	while (keep_creating(table))
 	{
-		philo = table->philosophers + p_count;
-		if (pthread_create(&(philo->thread), NULL, &phi_thread, (void *) philo))
+		pthread_mutex_lock(&table->self_lock);
+		philo = table->philosophers + table->thread_counter;
+		if (pthread_create(&(philo->thread), NULL, &phi_thread, (void *) table))
 			exit(EXIT_FAILURE);
-		p_count++;
 	}
 }
 
@@ -264,7 +315,7 @@ void	*overwatcher(void	*arg)
 	int		p_counter;
 
 	table = (t_table *)arg;
-	while (1)
+	while (philosophers_are_dinning(table))
 	{
 		p_counter = 0;
 		while (p_counter < table->n_philosophers)
