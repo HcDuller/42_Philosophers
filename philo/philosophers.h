@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 18:53:14 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/21 20:14:17 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/21 20:28:19 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef	struct s_philo
 	unsigned int	eat_time_ms;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
+	pthread_mutex_t	self_lock;
 } t_philo;
 
 typedef struct s_table

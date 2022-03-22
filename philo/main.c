@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/21 20:15:54 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/21 20:32:18 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,8 +172,10 @@ void	*phi_thread(void *arg)
 	philosopher = arg;
 	while (1)
 	{
+		pthread_mutex_lock(&philosopher->self_lock);
 		pick_forks(philosopher);
 		eat_action(philosopher);
+		pthread_mutex_unlock(&philosopher->self_lock);
 		release_forks(philosopher);
 		sleep_action(philosopher);
 	}
@@ -194,6 +196,8 @@ void	start_philosophers(t_table *table)
 		philo->left_fork = table->forks + p_count;
 		philo->last_meal = table->base_time;
 		philo->base_time = table->base_time;
+		if (pthread_mutex_init(&philo->self_lock, NULL))
+			exit(EXIT_FAILURE);
 		if (p_count + 1 == table->n_philosophers)
 			philo->right_fork = table->forks;
 		else
@@ -232,12 +236,15 @@ void	wait_philosophers(t_table	*table)
 void	check_starvation(t_philo	*philosopher)
 {
 	unsigned long int	elapsed_meal_time;
+	unsigned long int	elapsed_base_time;
 
-
+	pthread_mutex_lock(&philosopher->self_lock);
 	elapsed_meal_time = get_elapsed_ms(&philosopher->last_meal);
+	elapsed_base_time = get_elapsed_ms(&(philosopher->base_time));
+	pthread_mutex_unlock(&philosopher->self_lock);
 	if (elapsed_meal_time > philosopher->starv_time_ms)
 	{
-		printf("%08ld	[%02d]	(starved for %08ldms) died\n", get_elapsed_ms(&(philosopher->base_time)), philosopher->vector_id, elapsed_meal_time);
+		printf("%08ld	[%02d]	(starved for %08ldms) died\n", elapsed_base_time, philosopher->vector_id, elapsed_meal_time);
 		exit(EXIT_FAILURE);
 	}
 }
