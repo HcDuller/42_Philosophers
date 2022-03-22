@@ -2,3 +2,4 @@
 philo/.vscode
 philo/philo
 philo/*.o
+philo/obj/*.o
