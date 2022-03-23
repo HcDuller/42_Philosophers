@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 18:53:14 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/23 16:31:09 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/23 17:50:28 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,6 @@ int				philosophers_are_dinning(t_table	*table);
 void			*phi_thread(void *arg);
 void			eval_input(int argc, char **argv);
 void			start_watcher(t_table	*table);
+void			alloc_table(t_table	*table, unsigned int *args);
+void			free_table(t_table *table);
 #endif

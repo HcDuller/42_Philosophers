@@ -13,6 +13,7 @@ RAW =	main.c \
 		ft_strlen.c \
 		ft_strjoin.c \
 		time_management.c \
+		table_management.c \
 		watcher.c
 
 SRC_DIR	= src

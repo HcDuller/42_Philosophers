@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 13:56:39 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/23 16:35:53 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/23 18:44:10 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ static void	initialize_philosopher(t_table *table, int pos)
 	t_philo	*philo;
 
 	philo = table->philosophers + pos;
-	philo->vector_id = pos;
-	philo->left_fork = table->forks + pos;
-	philo->last_meal = table->base_time;
-	philo->base_time = table->base_time;
 	if (pthread_mutex_init(&philo->self_lock, NULL))
 		exit(EXIT_FAILURE);
+	philo->vector_id = pos;
+	philo->last_meal = table->base_time;
+	philo->base_time = table->base_time;
+	philo->left_fork = table->forks + pos;
 	if (pos + 1 == table->n_philosophers)
 		philo->right_fork = table->forks;
 	else
