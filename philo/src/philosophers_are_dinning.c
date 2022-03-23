@@ -6,13 +6,13 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 13:59:30 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/22 14:34:49 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/23 17:34:00 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers.h>
 
-int		philosophers_are_dinning(t_table	*table)
+int	philosophers_are_dinning(t_table	*table)
 {
 	int	ok;
 	int	p_counter;

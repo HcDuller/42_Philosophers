@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/22 16:09:19 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/23 17:38:24 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 unsigned int	str_to_uint(char *str)
 {
-	int	i;
+	int				i;
 	unsigned int	value;
 	unsigned int	pow;
 
@@ -33,7 +33,7 @@ unsigned int	str_to_uint(char *str)
 	return (value);
 }
 
-void	parse_params(int	argc, char *argv[], unsigned int	*i_args)
+void	parse_params(int argc, char *argv[], unsigned int *i_args)
 {
 	unsigned int	i;
 	unsigned int	u_argc;
@@ -41,7 +41,7 @@ void	parse_params(int	argc, char *argv[], unsigned int	*i_args)
 	u_argc = (unsigned int)argc - 1;
 	ft_bzero(i_args, 5 * sizeof(unsigned int));
 	i = 0;
-	while(i < u_argc)
+	while (i < u_argc)
 	{
 		i_args[i] = str_to_uint(*(argv + i));
 		i++;
@@ -57,7 +57,7 @@ void	alloc_table(t_table	*table, unsigned int *args)
 	table->philosophers = ft_calloc(args[0], sizeof(t_philo));
 	table->thread_counter = 0;
 	table->still_dining = 1;
-	if (pthread_mutex_init( &table->self_lock, NULL))
+	if (pthread_mutex_init(&table->self_lock, NULL))
 	{
 		write(STDERR_FILENO, "Error: could not create mutex.\n", 31);
 		exit(EXIT_FAILURE);
@@ -73,7 +73,7 @@ void	alloc_table(t_table	*table, unsigned int *args)
 			(table->philosophers + p_count)->meals_left = args[4];
 		else
 			(table->philosophers + p_count)->meals_left = -1;
-		if (pthread_mutex_init( table->forks + p_count, NULL))
+		if (pthread_mutex_init(table->forks + p_count, NULL))
 		{
 			write(STDERR_FILENO, "Error: could not create mutex.\n", 31);
 			exit(EXIT_FAILURE);
@@ -114,8 +114,7 @@ void	wait_philosophers(t_table	*table)
 	}
 }
 
-
-int	main(int	argc, char	*argv[])
+int	main(int argc, char *argv[])
 {
 	unsigned int	args[5];
 	t_table			table;
