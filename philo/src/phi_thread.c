@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 13:58:10 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/23 19:07:57 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/23 19:24:30 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,22 +51,18 @@ static void	pick_forks(t_philo	*philosopher)
 	id = philosopher->vector_id + 1;
 	if (philosopher->vector_id % 2)
 	{
-		printf("%08ld	[%02d]	trying to pick a fork(left hand)\n", get_elapsed_ms(&(philosopher->base_time)), id);
 		pthread_mutex_lock(philosopher->left_fork);
 		l_time = get_elapsed_ms(&(philosopher->base_time));
 		printf("%08ld	[%02d]	has taken a fork(left)\n", l_time, id);
-		printf("%08ld	[%02d]	trying to pick a fork(right hand)\n", get_elapsed_ms(&(philosopher->base_time)), id);
 		pthread_mutex_lock(philosopher->right_fork);
 		r_time = get_elapsed_ms(&(philosopher->base_time));
 		printf("%08ld	[%02d]	has taken a fork(right)\n", r_time, id);
 	}
 	else
 	{
-		printf("%08ld	[%02d]	trying to pick a fork(right hand)\n", get_elapsed_ms(&(philosopher->base_time)), id);
 		pthread_mutex_lock(philosopher->right_fork);
 		r_time = get_elapsed_ms(&(philosopher->base_time));
 		printf("%08ld	[%02d]	has taken a fork(right)\n", r_time, id);
-		printf("%08ld	[%02d]	trying to pick a fork(left hand)\n", get_elapsed_ms(&(philosopher->base_time)), id);
 		pthread_mutex_lock(philosopher->left_fork);
 		l_time = get_elapsed_ms(&(philosopher->base_time));
 		printf("%08ld	[%02d]	has taken a fork(left)\n", l_time, id);
