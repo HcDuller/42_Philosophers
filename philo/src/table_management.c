@@ -6,13 +6,13 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 17:49:47 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/23 18:31:23 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/23 21:26:02 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers.h>
 
-void	alloc_philosophers(t_table *table, unsigned int *args);
+void	init_philosophers(t_table *table, unsigned int *args);
 
 void	alloc_table(t_table	*table, unsigned int *args)
 {
@@ -27,7 +27,7 @@ void	alloc_table(t_table	*table, unsigned int *args)
 		exit(EXIT_FAILURE);
 	}
 	gettimeofday(&(table->base_time), NULL);
-	alloc_philosophers(table, args);
+	init_philosophers(table, args);
 }
 
 void	free_table(t_table *table)
@@ -46,13 +46,14 @@ void	free_table(t_table *table)
 	free(table->forks);
 }
 
-void	alloc_philosophers(t_table *table, unsigned int *args)
+void	init_philosophers(t_table *table, unsigned int *args)
 {
 	int	p_count;
 
 	p_count = 0;
 	while (p_count < table->n_philosophers)
 	{
+		(table->philosophers + p_count)->table = table;
 		(table->philosophers + p_count)->starv_time_ms = args[1];
 		(table->philosophers + p_count)->eat_time_ms = args[2];
 		(table->philosophers + p_count)->sleep_time_ms = args[3];
