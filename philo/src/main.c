@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 19:47:57 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/23 17:50:34 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/24 13:54:28 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	main(int argc, char *argv[])
 
 	eval_input(argc, argv);
 	parse_params(argc, argv + 1, args);
-	alloc_table(&table, args);
+	alloc_table(&table, argc, args);
 	start_philosophers(&table);
 	start_watcher(&table);
 	wait_philosophers(&table);

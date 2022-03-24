@@ -6,13 +6,12 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 13:56:39 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/23 22:08:43 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/24 14:03:14 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers.h>
 
-static int	keep_creating(t_table *table);
 static void	initialize_philosopher(t_table *table, int pos);
 
 void	start_philosophers(t_table *table)
@@ -26,12 +25,13 @@ void	start_philosophers(t_table *table)
 		initialize_philosopher(table, p_count);
 		p_count++;
 	}
-	while (keep_creating(table))
+	p_count = 0;
+	while (p_count < table->n_philosophers)
 	{
-		pthread_mutex_lock(&table->self_lock);
-		philo = table->philosophers + table->thread_counter;
-		if (pthread_create(&(philo->thread), NULL, &phi_thread, (void *) table))
+		philo = table->philosophers + p_count;
+		if (pthread_create(&(philo->thread), NULL, &phi_thread, (void *) philo))
 			exit(EXIT_FAILURE);
+		p_count++;
 	}
 }
 
@@ -50,15 +50,4 @@ static void	initialize_philosopher(t_table *table, int pos)
 		philo->right_fork = table->forks;
 	else
 		philo->right_fork = table->forks + pos + 1;
-}
-
-static int	keep_creating(t_table	*table)
-{
-	int	ok;
-
-	ok = 0;
-	pthread_mutex_lock(&table->self_lock);
-	ok = table->thread_counter < table->n_philosophers;
-	pthread_mutex_unlock(&table->self_lock);
-	return (ok);
 }

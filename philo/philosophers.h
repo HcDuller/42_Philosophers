@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 18:53:14 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/23 21:25:09 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/24 14:00:59 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@
 # define C_CYAN "\033[36m"
 # define C_WHITE "\033[37m"
 
-typedef struct s_philo
+typedef struct s_philo	t_philo;
+typedef struct s_table	t_table;
+
+struct s_philo
 {
 	pthread_t		thread;
 	int				vector_id;
@@ -42,9 +45,9 @@ typedef struct s_philo
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	self_lock;
 	t_table			*table;
-}	t_philo;
+};
 
-typedef struct s_table
+struct s_table
 {
 	int					n_philosophers;
 	int					thread_counter;
@@ -53,7 +56,7 @@ typedef struct s_table
 	pthread_mutex_t		*forks;
 	t_philo				*philosophers;
 	struct timeval		base_time;
-}	t_table;
+};
 
 void			ft_bzero(void *s, size_t n);
 void			*ft_calloc(size_t count, size_t size);
@@ -68,6 +71,6 @@ int				philosophers_are_dinning(t_table	*table);
 void			*phi_thread(void *arg);
 void			eval_input(int argc, char **argv);
 void			start_watcher(t_table	*table);
-void			alloc_table(t_table	*table, unsigned int *args);
+void			alloc_table(t_table	*table, int argc, unsigned int *args);
 void			free_table(t_table *table);
 #endif
