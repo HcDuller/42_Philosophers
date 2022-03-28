@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:07:27 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/24 17:03:58 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/24 17:27:33 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ static void	check_starvation(t_table	*table, t_philo	*philosopher)
 		table->still_dining = 0;
 		p_n = philosopher->vector_id + 1;
 		printf("%06ld	%02d	died\n", elapsed_b_time, p_n);
-		//pthread_mutex_unlock(&table->self_lock);
 		exit(EXIT_FAILURE);
 	}
 }

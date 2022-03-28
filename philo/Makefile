@@ -1,7 +1,7 @@
 NAME = philo
 
 CC			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -pthread -g
+CFLAGS		=	-Wall -Wextra -Werror -pthread
 
 RAW =	main.c \
 		ft_calloc_bzero.c \
