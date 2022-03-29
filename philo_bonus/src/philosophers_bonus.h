@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:18:15 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/29 00:16:10 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/29 13:43:41 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,12 @@
 # include <sys/time.h>
 # include <sys/wait.h>
 
-typedef	struct s_table t_table;
-typedef	struct s_philo t_philo;
+typedef struct s_table	t_table;
+typedef struct s_philo	t_philo;
 
 struct s_table
 {
 	sem_t			*forks;
-	sem_t			*philosophers_are_alive;
 	sem_t			*a_philo_died;
 	t_philo			*philosophers;
 	struct timeval	base_time;
@@ -50,7 +49,6 @@ struct s_philo
 	pthread_mutex_t	self_lock;
 	t_table			*table;
 };
-
 
 # define C_RESET "\033[0m"
 # define C_RED "\033[31m"

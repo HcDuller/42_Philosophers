@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:57:35 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/29 00:21:36 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/29 13:40:37 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 void	wait_dinner_end(t_table *table)
 {
-	unsigned int		id;
-	t_philo	*philosopher;
+	unsigned int	id;
+	t_philo			*philosopher;
 
 	id = 0;
-	while(id < table->n_philosophers)
+	while (id < table->n_philosophers)
 	{
 		philosopher = table->philosophers + id;
 		waitpid(philosopher->pid, &philosopher->e_code, 0);
