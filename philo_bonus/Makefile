@@ -11,7 +11,9 @@ RAW =	main.c \
 		time_functions.c \
 		start_dinner.c \
 		philosopher.c \
-		watcher.c
+		watcher.c \
+		fork_actions.c \
+		cleanups.c
 
 SRC_DIR	= src
 OBJ_DIR	= obj

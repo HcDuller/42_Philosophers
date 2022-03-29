@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:57:35 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/29 13:40:37 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/29 16:17:27 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,9 @@ void	wait_dinner_end(t_table *table)
 	{
 		philosopher = table->philosophers + id;
 		waitpid(philosopher->pid, &philosopher->e_code, 0);
+		printf("philosopher %d proc ended\n",philosopher->p_number);
 		id++;
 	}
-}
-
-void	clean_up(t_table *table)
-{
-	if (table->philosophers)
-		free(table->philosophers);
 }
 
 int	main(int argc, char *argv[])

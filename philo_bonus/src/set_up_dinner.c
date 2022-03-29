@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 18:16:42 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/29 13:42:59 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/29 15:34:58 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static	void	init_philosophers(t_table *table)
 		philosopher->p_number = i + 1;
 		philosopher->meals_left = table->meals;
 		philosopher->last_meal = table->base_time;
+		philosopher->alive = 1;
 		pthread_mutex_init(&philosopher->self_lock, NULL);
 		i++;
 	}
@@ -52,6 +53,8 @@ static	void	set_up_semaphores(t_table *table, unsigned int	*args)
 	table->forks = sem_open("/forks", O_CREAT, options, (int) args[0]);
 	sem_unlink("/philos_dead");
 	table->a_philo_died = sem_open("/philos_dead", O_CREAT, options, 1);
+	sem_unlink("/print");
+	table->print_lock = sem_open("/print", O_CREAT, options, 1);
 }
 
 static	void	set_up_table(t_table *table, unsigned int	*args)

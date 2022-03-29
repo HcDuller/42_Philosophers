@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:18:15 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/29 13:43:41 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/29 16:37:36 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ struct s_table
 {
 	sem_t			*forks;
 	sem_t			*a_philo_died;
+	sem_t			*print_lock;
 	t_philo			*philosophers;
 	struct timeval	base_time;
 	int				meals;
@@ -44,6 +45,7 @@ struct s_philo
 	pid_t			pid;
 	int				p_number;
 	int				e_code;
+	int				alive;
 	int				meals_left;
 	struct timeval	last_meal;
 	pthread_mutex_t	self_lock;
@@ -68,5 +70,8 @@ unsigned long int	get_elapsed_ms(struct timeval *base_time);
 void				start_dinner(t_table *table);
 void				start_philosopher(t_philo *philosopher);
 void				*watcher(void *arg);
-
+int					release_forks(t_philo *philosopher);
+int					pick_forks(t_philo *philosopher);
+void				forked_cleanup(t_philo *philosopher);
+void				clean_up(t_table *table);
 #endif
