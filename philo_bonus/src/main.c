@@ -6,11 +6,31 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:57:35 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/28 19:19:39 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/29 00:21:36 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers_bonus.h>
+
+void	wait_dinner_end(t_table *table)
+{
+	unsigned int		id;
+	t_philo	*philosopher;
+
+	id = 0;
+	while(id < table->n_philosophers)
+	{
+		philosopher = table->philosophers + id;
+		waitpid(philosopher->pid, &philosopher->e_code, 0);
+		id++;
+	}
+}
+
+void	clean_up(t_table *table)
+{
+	if (table->philosophers)
+		free(table->philosophers);
+}
 
 int	main(int argc, char *argv[])
 {
@@ -21,7 +41,11 @@ int	main(int argc, char *argv[])
 	parse_params(argc, argv + 1, args);
 	if (args[0])
 	{
-		set_up_dinner(&table, argc, args);
+		ft_bzero(&table, sizeof(t_table));
+		set_up_dinner(&table, args);
+		start_dinner(&table);
+		wait_dinner_end(&table);
+		clean_up(&table);
 	}
 	return (0);
 }

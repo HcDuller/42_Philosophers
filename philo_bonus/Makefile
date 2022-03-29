@@ -10,7 +10,8 @@ RAW =	main.c \
 		ft_calloc_bzero.c \
 		time_functions.c \
 		start_dinner.c \
-		philosopher.c
+		philosopher.c \
+		watcher.c
 
 SRC_DIR	= src
 OBJ_DIR	= obj
