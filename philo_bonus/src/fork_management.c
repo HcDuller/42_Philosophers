@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 00:18:12 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/30 00:41:23 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/30 13:12:05 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ int	release_forks(t_table	*table)
 {
 	sem_wait(table->fork_lock);
 	sem_post(table->forks);
-	sem_post(table->forks);
-	sem_post(table->fork_lock);
 	print_msg("%06ld	%02d	has released a fork\n", table);
+	sem_post(table->forks);
+	print_msg("%06ld	%02d	has released a fork\n", table);
+	sem_post(table->fork_lock);
 	return (1);
 }

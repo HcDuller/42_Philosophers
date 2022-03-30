@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:18:15 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/30 01:22:54 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/30 13:27:55 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,7 @@ void				start_philosopher(t_philo	*philosopher);
 int					philo_eat(t_table *table);
 int					philo_sleep(t_table *table);
 int					philo_think(t_table *table);
+int					simulating(t_table *table);
+void				end_simulation(t_table *table);
+int					starved_to_death(t_table *table);
 #endif

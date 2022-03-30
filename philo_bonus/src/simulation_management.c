@@ -1,38 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   actions.c                                          :+:      :+:    :+:   */
+/*   simulation_management.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/30 01:17:31 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/30 13:29:33 by hde-camp         ###   ########.fr       */
+/*   Created: 2022/03/30 13:12:42 by hde-camp          #+#    #+#             */
+/*   Updated: 2022/03/30 13:22:30 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers_bonus.h>
 
-int	philo_eat(t_table *table)
+int	simulating(t_table *table)
 {
-	if (simulating(table) && !starved_to_death(table))
-	{
-		print_msg("%06ld	%02d	is eating\n", table);
-		usleep(table->eat_time_ms * 1000);
-		return (1);
-	}
-	return (0);
+	int	running;
+
+	sem_wait(table->simulation_lock);
+	running = table->simulation->__align;
+	sem_post(table->simulation_lock);
+	return (running);
 }
 
-int	philo_sleep(t_table *table)
+void	end_simulation(t_table *table)
 {
-	print_msg("%06ld	%02d	is sleeping\n", table);
-	usleep(table->sleep_time_ms * 1000);
-	return (1);
-}
-
-int	philo_think(t_table *table)
-{
-	print_msg("%06ld	%02d	is thinking\n", table);
-	usleep(100);
-	return (1);
+	sem_wait(table->simulation_lock);
+	if (table->simulation->__align)
+		sem_wait(table->simulation_lock);
+	sem_post(table->simulation_lock);
 }

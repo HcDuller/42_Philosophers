@@ -13,7 +13,9 @@ RAW =	main.c \
 		get_elapsed_time.c \
 		print_msg.c \
 		dinner_management.c \
-		actions.c
+		actions.c \
+		simulation_management.c \
+		check_starvation.c
 
 
 SRC_DIR	= src
