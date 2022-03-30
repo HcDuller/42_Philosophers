@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 19:00:07 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/29 13:43:07 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/29 17:42:35 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	start_dinner(t_table *table)
 		{
 			start_philosopher(philosopher);
 		}
-		usleep(50);
+		usleep(100);
 		proc_c++;
 	}
 }

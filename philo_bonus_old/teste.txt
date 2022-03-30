@@ -1,0 +1,174 @@
+000000	03	has taken a fork
+000200	03	has taken a fork
+000200	03	is eating
+000400	03	has released a fork
+000400	03	has released a fork
+000400	03	is sleeping
+000600	03	is thinking
+000600	03	has taken a fork
+000600	03	has taken a fork
+000600	03	is eating
+000800	03	has released a fork
+000800	03	has released a fork
+000800	03	is sleeping
+001000	03	is thinking
+001000	03	has taken a fork
+001000	03	has taken a fork
+001000	03	is eating
+001200	03	has released a fork
+001200	03	has released a fork
+001200	03	is sleeping
+001401	03	is thinking
+001401	03	has taken a fork
+001600	03	has taken a fork
+001600	03	is eating
+001801	03	has released a fork
+001801	03	has released a fork
+001801	03	is sleeping
+002001	03	is thinking
+002001	03	has taken a fork
+002001	03	has taken a fork
+002001	03	is eating
+002201	03	has released a fork
+002201	03	has released a fork
+002201	03	is sleeping
+002401	03	is thinking
+002401	03	has taken a fork
+002401	03	has taken a fork
+002401	03	is eating
+000200	04	has taken a fork
+000400	04	has taken a fork
+000400	04	is eating
+000600	04	has released a fork
+000600	04	has released a fork
+000600	04	is sleeping
+000800	04	is thinking
+000800	04	has taken a fork
+000800	04	has taken a fork
+000800	04	is eating
+001000	04	has released a fork
+001000	04	has released a fork
+001000	04	is sleeping
+001200	04	is thinking
+001201	04	has taken a fork
+001400	04	has taken a fork
+001400	04	is eating
+001600	04	has released a fork
+001600	04	has released a fork
+001600	04	is sleeping
+001801	04	is thinking
+001801	04	has taken a fork
+001801	04	has taken a fork
+001801	04	is eating
+002001	04	has released a fork
+002001	04	has released a fork
+002001	04	is sleeping
+002201	04	is thinking
+002201	04	has taken a fork
+002601	04	died
+000000	01	has taken a fork
+000000	01	has taken a fork
+000000	01	is eating
+000200	01	has released a fork
+000200	01	has released a fork
+000200	01	is sleeping
+000400	01	is thinking
+000400	01	has taken a fork
+000400	01	has taken a fork
+000400	01	is eating
+000600	01	has released a fork
+000600	01	has released a fork
+000600	01	is sleeping
+000800	01	is thinking
+000800	01	has taken a fork
+000800	01	has taken a fork
+000800	01	is eating
+001000	01	has released a fork
+001000	01	has released a fork
+001000	01	is sleeping
+001200	01	is thinking
+001200	01	has taken a fork
+001200	01	has taken a fork
+001200	01	is eating
+001400	01	has released a fork
+001400	01	has released a fork
+001400	01	is sleeping
+001600	01	is thinking
+001601	01	has taken a fork
+001601	01	has taken a fork
+001601	01	is eating
+001801	01	has released a fork
+001801	01	has released a fork
+001801	01	is sleeping
+002001	01	is thinking
+002001	01	has taken a fork
+002201	01	has taken a fork
+002201	01	is eating
+002401	01	has released a fork
+002401	01	has released a fork
+002401	01	is sleeping
+000000	02	has taken a fork
+000000	02	has taken a fork
+000000	02	is eating
+000200	02	has released a fork
+000200	02	has released a fork
+000200	02	is sleeping
+000400	02	is thinking
+000400	02	has taken a fork
+000600	02	has taken a fork
+000600	02	is eating
+000800	02	has released a fork
+000800	02	has released a fork
+000800	02	is sleeping
+001000	02	is thinking
+001000	02	has taken a fork
+001201	02	has taken a fork
+001201	02	is eating
+001401	02	has released a fork
+001401	02	has released a fork
+001401	02	is sleeping
+001601	02	is thinking
+001601	02	has taken a fork
+001801	02	has taken a fork
+001801	02	is eating
+002001	02	has released a fork
+002001	02	has released a fork
+002001	02	is sleeping
+002201	02	is thinking
+002201	02	has taken a fork
+002201	02	has taken a fork
+002201	02	is eating
+002401	02	has released a fork
+002401	02	has released a fork
+002401	02	is sleeping
+000200	05	has taken a fork
+000200	05	has taken a fork
+000200	05	is eating
+000400	05	has released a fork
+000400	05	has released a fork
+000400	05	is sleeping
+000600	05	is thinking
+000600	05	has taken a fork
+001000	05	has taken a fork
+001000	05	is eating
+001200	05	has released a fork
+001200	05	has released a fork
+001200	05	is sleeping
+001400	05	is thinking
+001400	05	has taken a fork
+001401	05	has taken a fork
+001401	05	is eating
+001601	05	has released a fork
+001601	05	has released a fork
+001601	05	is sleeping
+001801	05	is thinking
+001801	05	has taken a fork
+002001	05	has taken a fork
+002001	05	is eating
+002201	05	has released a fork
+002201	05	has released a fork
+002201	05	is sleeping
+002401	05	is thinking
+002401	05	has taken a fork
+002401	05	has taken a fork
+002401	05	is eating

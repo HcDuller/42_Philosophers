@@ -13,7 +13,8 @@ RAW =	main.c \
 		philosopher.c \
 		watcher.c \
 		fork_actions.c \
-		cleanups.c
+		cleanups.c \
+		check_simulation.c
 
 SRC_DIR	= src
 OBJ_DIR	= obj

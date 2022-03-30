@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 19:45:18 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/29 16:44:13 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/29 20:57:10 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	eat_action(t_philo *philosopher);
 static int	sleep_action(t_philo *philosopher);
 static int	think_action(t_philo *philosopher);
 static void	chained_actions(t_philo *philosopher);
-static int	keep_going(t_philo *philosopher);
+static int	alive_and_hungry(t_philo *philosopher);
 
 void	start_philosopher(t_philo *philosopher)
 {
@@ -24,17 +24,11 @@ void	start_philosopher(t_philo *philosopher)
 
 	pthread_mutex_init(&philosopher->self_lock, NULL);
 	pthread_create(&watcher_t, NULL, &watcher, (void *) philosopher);
-	while (keep_going(philosopher))
+	while (alive_and_hungry(philosopher))
 	{
-		pick_forks(philosopher);
-		eat_action(philosopher);
-		release_forks(philosopher);
-		sleep_action(philosopher);
-		think_action(philosopher);
+		chained_actions(philosopher);
 	}
-	printf("philosopher %d is joining with watcher!\n", philosopher->p_number);
 	pthread_join(watcher_t, NULL);
-	printf("philosopher %d is joined with watcher!\n", philosopher->p_number);
 	pthread_mutex_destroy(&philosopher->self_lock);
 	forked_cleanup(philosopher);
 	exit(EXIT_SUCCESS);
@@ -53,25 +47,25 @@ static void	chained_actions(t_philo *philosopher)
 	keep_going = 1;
 	while (keep_going != 0 && keep_going < 6)
 	{
-		if (fnc[keep_going + -1](philosopher))
+		if (fnc[keep_going -1](philosopher))
 			keep_going++;
 		else
 			keep_going = 0;
 	}
 }
 
-static int	keep_going(t_philo *philosopher)
+static int	alive_and_hungry(t_philo *philosopher)
 {
 	int	meals;
 	int	alive;
+	int simulation;
 
 	pthread_mutex_lock(&philosopher->self_lock);
 	alive = philosopher->alive;
 	meals = philosopher->meals_left > 0 || philosopher->meals_left == -1;
+	simulation = simulation_is_running(philosopher);
 	pthread_mutex_unlock(&philosopher->self_lock);
-	printf("p[%d] alive[%d] meals[%d] a-m[%d]\n", philosopher->p_number, alive, meals, alive && meals);
-	return (alive && meals);
-
+	return (alive && meals && simulation);
 }
 
 static int	eat_action(t_philo *philosopher)
@@ -80,21 +74,19 @@ static int	eat_action(t_philo *philosopher)
 	char			*msg;
 
 	msg = "%06ld	%02d	is eating\n";
-	pthread_mutex_lock(&philosopher->self_lock);
-	if (philosopher->alive)
+	if (philo_alive(philosopher) && simulation_is_running(philosopher))
 	{
+		ellapsed_time = get_elapsed_ms(&philosopher->table->base_time);
+		pthread_mutex_lock(&philosopher->self_lock);
 		if (philosopher->meals_left > 0)
 			philosopher->meals_left -= 1;
-		ellapsed_time = get_elapsed_ms(&philosopher->table->base_time);
 		gettimeofday(&philosopher->last_meal, NULL);
 		pthread_mutex_unlock(&philosopher->self_lock);
-		sem_wait(philosopher->table->print_lock);
 		printf(msg, ellapsed_time, philosopher->p_number);
-		sem_post(philosopher->table->print_lock);
 		usleep(philosopher->table->eat_time_ms * 1000);
+		return (1);
 	}
-	else
-		pthread_mutex_unlock(&philosopher->self_lock);
+	return (0);
 }
 
 static int	sleep_action(t_philo *philosopher)
@@ -103,18 +95,16 @@ static int	sleep_action(t_philo *philosopher)
 	char			*msg;
 
 	msg = "%06ld	%02d	is sleeping\n";
-	pthread_mutex_lock(&philosopher->self_lock);
-	if (philosopher->alive)
+	if (philo_alive(philosopher) && simulation_is_running(philosopher))
 	{
 		ellapsed_time = get_elapsed_ms(&philosopher->table->base_time);
-		pthread_mutex_unlock(&philosopher->self_lock);
-		sem_wait(philosopher->table->print_lock);
 		printf(msg, ellapsed_time, philosopher->p_number);
-		sem_post(philosopher->table->print_lock);
 		usleep(philosopher->table->sleep_time_ms * 1000);
+		return (1);
 	}
-	else
-		pthread_mutex_unlock(&philosopher->self_lock);
+	ellapsed_time = get_elapsed_ms(&philosopher->table->base_time);
+	printf("%06ld	%02d	skiped sleeping\n", ellapsed_time, philosopher->p_number);
+	return (0);
 }
 
 static int	think_action(t_philo *philosopher)
@@ -123,16 +113,14 @@ static int	think_action(t_philo *philosopher)
 	char			*msg;
 
 	msg = "%06ld	%02d	is thinking\n";
-	pthread_mutex_lock(&philosopher->self_lock);
-	if (philosopher->alive)
+	if (philo_alive(philosopher) && simulation_is_running(philosopher))
 	{
 		ellapsed_time = get_elapsed_ms(&philosopher->table->base_time);
-		pthread_mutex_unlock(&philosopher->self_lock);
-		sem_wait(philosopher->table->print_lock);
 		printf(msg, ellapsed_time, philosopher->p_number);
-		sem_post(philosopher->table->print_lock);
-		usleep(100);
+		usleep(500);
+		return (1);
 	}
-	else
-		pthread_mutex_unlock(&philosopher->self_lock);
+	ellapsed_time = get_elapsed_ms(&philosopher->table->base_time);
+	printf("%06ld	%02d	skiped thinking\n", ellapsed_time, philosopher->p_number);
+	return (0);
 }

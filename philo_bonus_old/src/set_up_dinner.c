@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 18:16:42 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/29 15:34:58 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/29 18:10:41 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,16 @@ static	void	set_up_semaphores(t_table *table, unsigned int	*args)
 	options = S_IRUSR | S_IWUSR;
 	sem_unlink("/forks");
 	table->forks = sem_open("/forks", O_CREAT, options, (int) args[0]);
+	sem_unlink("/fork_lock");
+	table->fork_lock = sem_open("/fork_lock", O_CREAT, options, 1);
 	sem_unlink("/philos_dead");
 	table->a_philo_died = sem_open("/philos_dead", O_CREAT, options, 1);
 	sem_unlink("/print");
 	table->print_lock = sem_open("/print", O_CREAT, options, 1);
+	sem_unlink("/simulation");
+	table->simulation = sem_open("/simulation", O_CREAT, options, 1);
+	sem_unlink("/simulation_lock");
+	table->simulation_lock = sem_open("/simulation_lock", O_CREAT, options, 1);
 }
 
 static	void	set_up_table(t_table *table, unsigned int	*args)

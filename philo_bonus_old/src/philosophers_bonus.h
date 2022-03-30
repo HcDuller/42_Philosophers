@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:18:15 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/29 16:37:36 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/29 19:38:33 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ typedef struct s_philo	t_philo;
 struct s_table
 {
 	sem_t			*forks;
+	sem_t			*fork_lock;
 	sem_t			*a_philo_died;
+	sem_t			*simulation;
+	sem_t			*simulation_lock;
 	sem_t			*print_lock;
 	t_philo			*philosophers;
 	struct timeval	base_time;
@@ -74,4 +77,7 @@ int					release_forks(t_philo *philosopher);
 int					pick_forks(t_philo *philosopher);
 void				forked_cleanup(t_philo *philosopher);
 void				clean_up(t_table *table);
+int					simulation_is_running(t_philo	*philosopher);
+void				close_semaphores(t_table *table);
+int					philo_alive(t_philo	*philosopher);
 #endif
