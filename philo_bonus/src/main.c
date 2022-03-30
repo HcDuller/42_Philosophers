@@ -6,21 +6,65 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:57:35 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/30 01:23:00 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/30 17:10:54 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers_bonus.h>
 
+void	*watcher(void *arg)
+{
+	t_table	*table;
+
+	table = arg;
+	while (1)
+	{
+		if(starved_to_death(table))
+		{
+			break;
+		}
+		if (!simulating(table))
+		{
+			break;
+		}
+	}
+	return (NULL);
+}
+
 void	start_philosopher(t_philo	*philosopher)
 {
-	printf("Philosopher %d started!\n", philosopher->p_number);
-	pick_forks(philosopher->table);
-	release_forks(philosopher->table);
-	philo_eat(philosopher->table);
-	philo_sleep(philosopher->table);
-	philo_think(philosopher->table);
-	undo_table(philosopher->table);
+	int	t;
+	pthread_t	watcher_t;
+
+	t = 1;
+	if (pthread_create(&watcher_t, NULL, watcher, philosopher->table))
+	{
+		perror("Error when creating watcher:");
+		undo_child_table(philosopher->table);
+	}
+	while (t)
+	{
+		t = pick_forks(philosopher->table);
+		if (t)
+		{
+			t = philo_eat(philosopher->table);
+		}
+		if (t)
+		{
+			t = release_forks(philosopher->table);
+		}
+		if (t)
+		{
+			t = philo_sleep(philosopher->table);
+		}
+		if (t)
+		{
+			t = philo_think(philosopher->table);
+		}
+	}
+	if (pthread_join(watcher_t, NULL))
+		perror("pthread error:");
+	undo_child_table(philosopher->table);
 	exit(EXIT_SUCCESS);
 }
 

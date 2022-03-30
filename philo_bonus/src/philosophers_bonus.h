@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:18:15 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/30 13:27:55 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/30 17:12:30 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ struct s_table
 {
 	sem_t			*forks;
 	sem_t			*fork_lock;
+	sem_t			*hands_lock;
 	sem_t			*simulation;
 	sem_t			*simulation_lock;
 	t_philo			philosopher;
@@ -73,8 +74,11 @@ void				eval_input(int argc, char **argv);
 void				parse_params(int argc, char *argv[], unsigned int *i_args);
 void				init_semaphores(t_table *table);
 void				destroy_semaphores(t_table *table);
+void				close_semaphores(t_table *table);
+void				unlink_semaphores();
 void				set_up_table(t_table *table, unsigned int *args);
 void				undo_table(t_table	*table);
+void				undo_child_table(t_table *table);
 unsigned long int	get_elapsed_ms(struct timeval *base_time);
 int					pick_forks(t_table	*table);
 int					release_forks(t_table	*table);
@@ -88,4 +92,5 @@ int					philo_think(t_table *table);
 int					simulating(t_table *table);
 void				end_simulation(t_table *table);
 int					starved_to_death(t_table *table);
+int					is_alive(t_table *table);
 #endif
