@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 17:49:47 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/30 22:51:10 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/31 13:04:10 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	alloc_table(t_table	*table, int argc, unsigned int *args)
 	table->philosophers = ft_calloc(args[0], sizeof(t_philo));
 	table->thread_counter = 0;
 	table->still_dining = 1;
+	table->allowed_to_dine = 0;
 	if (pthread_mutex_init(&table->self_lock, NULL))
 	{
 		write(STDERR_FILENO, "Error: could not create mutex.\n", 31);

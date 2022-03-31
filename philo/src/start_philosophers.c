@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 13:56:39 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/24 14:03:14 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/31 00:06:16 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	start_philosophers(t_table *table)
 		philo = table->philosophers + p_count;
 		if (pthread_create(&(philo->thread), NULL, &phi_thread, (void *) philo))
 			exit(EXIT_FAILURE);
+		usleep(100);
 		p_count++;
 	}
 }

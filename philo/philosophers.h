@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 18:53:14 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/30 23:17:49 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/31 14:21:32 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ struct s_table
 	int					n_philosophers;
 	int					thread_counter;
 	int					still_dining;
+	int					allowed_to_dine;
 	pthread_mutex_t		self_lock;
 	pthread_mutex_t		*forks;
 	t_philo				*philosophers;
@@ -77,4 +78,6 @@ int				dinner_is_over(t_table *table);
 int				try_lock(pthread_mutex_t *mutex, t_table *table);
 int				pick_forks(t_philo	*philosopher);
 int				release_forks(t_philo	*philosopher);
+void			print_msg(char *msg, t_philo *philosopher);
+int				get_next_in_line(t_philo *philosopher);
 #endif

@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 23:16:22 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/30 23:26:42 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/31 14:30:02 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,14 @@ int	release_forks(t_philo	*philosopher)
 
 static int	release_right_fork(t_philo *philosopher)
 {
-	int				id;
-	unsigned long	r_time;
-
-	id = philosopher->vector_id + 1;
 	pthread_mutex_unlock(philosopher->right_fork);
-	r_time = get_elapsed_ms(&(philosopher->base_time));
-	printf("%06ld	%02d	released a fork(right)\n", r_time, id);
+	print_msg("%06ld	%02d	released a fork(right)\n", philosopher);
 	return (1);
 }
 
 static int	release_left_fork(t_philo *philosopher)
 {
-	int				id;
-	unsigned long	r_time;
-
-	id = philosopher->vector_id + 1;
 	pthread_mutex_unlock(philosopher->left_fork);
-	r_time = get_elapsed_ms(&(philosopher->base_time));
-	printf("%06ld	%02d	released a fork(left)\n", r_time, id);
+	print_msg("%06ld	%02d	released a fork(left)\n", philosopher);
 	return (1);
 }

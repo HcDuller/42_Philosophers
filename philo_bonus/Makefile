@@ -1,7 +1,7 @@
 NAME = philo_bonus
 
 CC			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -pthread -g
+CFLAGS		=	-Wall -Wextra -Werror -pthread
 
 RAW =	main.c \
 		eval_input.c \
