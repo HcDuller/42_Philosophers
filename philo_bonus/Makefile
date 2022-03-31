@@ -3,20 +3,20 @@ NAME = philo_bonus
 CC			=	cc
 CFLAGS		=	-Wall -Wextra -Werror -pthread
 
-RAW =	main.c \
-		eval_input.c \
-		ft_calloc_bzero.c \
-		parse_params.c \
-		semaphores.c \
-		table_management.c \
-		fork_management.c \
-		get_elapsed_time.c \
-		print_msg.c \
-		dinner_management.c \
-		actions.c \
-		simulation_management.c \
-		check_hungry_state.c \
-		try_wait.c
+RAW =	main_bonus.c \
+		eval_input_bonus.c \
+		ft_calloc_bzero_bonus.c \
+		parse_params_bonus.c \
+		semaphores_bonus.c \
+		table_management_bonus.c \
+		fork_management_bonus.c \
+		get_elapsed_time_bonus.c \
+		print_msg_bonus.c \
+		dinner_management_bonus.c \
+		actions_bonus.c \
+		simulation_management_bonus.c \
+		check_hungry_state_bonus.c \
+		try_wait_bonus.c
 
 
 SRC_DIR	= src
