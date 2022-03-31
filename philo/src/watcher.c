@@ -6,13 +6,13 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:07:27 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/24 17:27:33 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/30 22:05:22 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers.h>
 
-static void	check_starvation(t_table	*table, t_philo	*philosopher);
+static int	philosopher_starved(t_table	*table, t_philo	*philosopher);
 static void	*overwatcher(void	*arg);
 
 void	start_watcher(t_table	*table)
@@ -24,9 +24,10 @@ void	start_watcher(t_table	*table)
 		write(STDERR_FILENO, "Could not create overwatcher.\n", 30);
 		exit(EXIT_FAILURE);
 	}
+	pthread_join(watcher, NULL);
 }
 
-static void	check_starvation(t_table	*table, t_philo	*philosopher)
+static int	philosopher_starved(t_table	*table, t_philo	*philosopher)
 {
 	unsigned long int	elapsed_meal_time;
 	unsigned long int	elapsed_b_time;
@@ -41,8 +42,9 @@ static void	check_starvation(t_table	*table, t_philo	*philosopher)
 		table->still_dining = 0;
 		p_n = philosopher->vector_id + 1;
 		printf("%06ld	%02d	died\n", elapsed_b_time, p_n);
-		exit(EXIT_FAILURE);
+		return (1);
 	}
+	return (0);
 }
 
 static void	*overwatcher(void	*arg)
@@ -57,7 +59,11 @@ static void	*overwatcher(void	*arg)
 		pthread_mutex_lock(&table->self_lock);
 		while (p_counter < table->n_philosophers)
 		{
-			check_starvation(table, table->philosophers + p_counter);
+			if (philosopher_starved(table, table->philosophers + p_counter))
+			{
+				pthread_mutex_unlock(&table->self_lock);
+				return (NULL);
+			}
 			p_counter++;
 		}
 		pthread_mutex_unlock(&table->self_lock);

@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 17:49:47 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/24 13:59:41 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/30 22:51:10 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	alloc_table(t_table	*table, int argc, unsigned int *args)
 		write(STDERR_FILENO, "Error: could not create mutex.\n", 31);
 		exit(EXIT_FAILURE);
 	}
+	pthread_mutex_lock(&table->self_lock);
+	pthread_mutex_unlock(&table->self_lock);
 	if (argc == 5)
 		args[4] = -1;
 	gettimeofday(&(table->base_time), NULL);

@@ -6,88 +6,57 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 13:58:10 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/24 13:45:07 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/30 23:18:02 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers.h>
 
-static void	pick_forks(t_philo	*philosopher);
-static void	release_forks(t_philo	*philosopher);
+static int	philosopher_life(t_philo *philosopher);
 
 void	*phi_thread(void *arg)
 {
 	t_philo	*philosopher;
+	int		meals_left;
 
 	philosopher = (t_philo *)arg;
-	while (philosophers_are_dinning(philosopher->table))
+	while (!dinner_is_over(philosopher->table))
 	{
-		if (philosopher->meals_left != 0)
+		pthread_mutex_lock(&philosopher->self_lock);
+		meals_left = philosopher->meals_left;
+		pthread_mutex_unlock(&philosopher->self_lock);
+		if (meals_left == 0)
 		{
-			pick_forks(philosopher);
-			eat_action(philosopher);
-			release_forks(philosopher);
-			if (philosopher->meals_left == 0)
+			return (NULL);
+		}
+		else if (meals_left != 0)
+		{
+			if (!philosopher_life(philosopher))
 			{
 				return (NULL);
 			}
 		}
-		sleep_action(philosopher);
-		think_action(philosopher);
 	}
 	return (NULL);
 }
 
-static void	pick_forks(t_philo	*philosopher)
+static int	philosopher_life(t_philo *philosopher)
 {
-	int				id;
-	unsigned long	l_time;
-	unsigned long	r_time;
+	int	(*fnc[5])(t_philo *);
+	int	keep_going;
 
-	id = philosopher->vector_id + 1;
-	if (philosopher->vector_id % 2)
+	fnc[0] = pick_forks;
+	fnc[1] = eat_action;
+	fnc[2] = release_forks;
+	fnc[3] = sleep_action;
+	fnc[4] = think_action;
+	keep_going = 1;
+	while (keep_going != 0 && keep_going < 6)
 	{
-		pthread_mutex_lock(philosopher->left_fork);
-		l_time = get_elapsed_ms(&(philosopher->base_time));
-		printf("%06ld	%02d	has taken a fork(left)\n", l_time, id);
-		pthread_mutex_lock(philosopher->right_fork);
-		r_time = get_elapsed_ms(&(philosopher->base_time));
-		printf("%06ld	%02d	has taken a fork(right)\n", r_time, id);
+		if (fnc[keep_going - 1](philosopher))
+			keep_going++;
+		else
+			keep_going = 0;
 	}
-	else
-	{
-		pthread_mutex_lock(philosopher->right_fork);
-		r_time = get_elapsed_ms(&(philosopher->base_time));
-		printf("%06ld	%02d	has taken a fork(right)\n", r_time, id);
-		pthread_mutex_lock(philosopher->left_fork);
-		l_time = get_elapsed_ms(&(philosopher->base_time));
-		printf("%06ld	%02d	has taken a fork(left)\n", l_time, id);
-	}
-}
-
-static void	release_forks(t_philo	*philosopher)
-{
-	int				id;
-	unsigned long	l_time;
-	unsigned long	r_time;
-
-	id = philosopher->vector_id + 1;
-	if (philosopher->vector_id % 2)
-	{
-		pthread_mutex_unlock(philosopher->left_fork);
-		l_time = get_elapsed_ms(&(philosopher->base_time));
-		printf("%06ld	%02d	released a fork(left)\n", l_time, id);
-		pthread_mutex_unlock(philosopher->right_fork);
-		r_time = get_elapsed_ms(&(philosopher->base_time));
-		printf("%06ld	%02d	released a fork(right)\n", r_time, id);
-	}
-	else
-	{
-		pthread_mutex_unlock(philosopher->right_fork);
-		r_time = get_elapsed_ms(&(philosopher->base_time));
-		printf("%06ld	%02d	released a fork(right)\n", r_time, id);
-		pthread_mutex_unlock(philosopher->left_fork);
-		l_time = get_elapsed_ms(&(philosopher->base_time));
-		printf("%06ld	%02d	released a fork(left)\n", l_time, id);
-	}
+	return (keep_going != 0);
 }

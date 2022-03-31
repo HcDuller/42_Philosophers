@@ -1,7 +1,7 @@
 NAME = philo
 
 CC			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -pthread
+CFLAGS		=	-Wall -Wextra -Werror -pthread -g
 
 RAW =	main.c \
 		ft_calloc_bzero.c \
@@ -14,6 +14,10 @@ RAW =	main.c \
 		ft_strjoin.c \
 		time_management.c \
 		table_management.c \
+		dinner_is_over.c \
+		try_lock.c \
+		pick_forks.c \
+		release_forks.c \
 		watcher.c
 
 SRC_DIR	= src

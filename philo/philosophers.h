@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 18:53:14 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/24 14:00:59 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/30 23:17:49 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@ void			*ft_calloc(size_t count, size_t size);
 size_t			ft_strlen(const char *s);
 char			*ft_strjoin(char const *s1, char const *s2);
 unsigned long	get_elapsed_ms(struct timeval *base_time);
-void			eat_action(t_philo	*philosopher);
-void			sleep_action(t_philo	*philosopher);
-void			think_action(t_philo	*philosopher);
+int				eat_action(t_philo	*philosopher);
+int				sleep_action(t_philo	*philosopher);
+int				think_action(t_philo	*philosopher);
 void			start_philosophers(t_table *table);
 int				philosophers_are_dinning(t_table	*table);
 void			*phi_thread(void *arg);
@@ -73,4 +73,8 @@ void			eval_input(int argc, char **argv);
 void			start_watcher(t_table	*table);
 void			alloc_table(t_table	*table, int argc, unsigned int *args);
 void			free_table(t_table *table);
+int				dinner_is_over(t_table *table);
+int				try_lock(pthread_mutex_t *mutex, t_table *table);
+int				pick_forks(t_philo	*philosopher);
+int				release_forks(t_philo	*philosopher);
 #endif
