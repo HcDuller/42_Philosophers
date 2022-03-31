@@ -15,7 +15,8 @@ RAW =	main.c \
 		dinner_management.c \
 		actions.c \
 		simulation_management.c \
-		check_starvation.c
+		check_hungry_state.c \
+		try_wait.c
 
 
 SRC_DIR	= src

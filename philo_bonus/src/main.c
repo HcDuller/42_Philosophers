@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:57:35 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/30 17:10:54 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/30 21:36:04 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,24 @@ void	*watcher(void *arg)
 	t_table	*table;
 
 	table = arg;
-	while (1)
+	while (!is_full(table))
 	{
-		if(starved_to_death(table))
+		if (starved_to_death(table))
 		{
-			break;
+			break ;
 		}
 		if (!simulating(table))
 		{
-			break;
+			break ;
 		}
+		usleep(100);
 	}
 	return (NULL);
 }
 
 void	start_philosopher(t_philo	*philosopher)
 {
-	int	t;
+	int			t;
 	pthread_t	watcher_t;
 
 	t = 1;
@@ -42,7 +43,7 @@ void	start_philosopher(t_philo	*philosopher)
 		perror("Error when creating watcher:");
 		undo_child_table(philosopher->table);
 	}
-	while (t)
+	while (!is_full(philosopher->table) && simulating(philosopher->table))
 	{
 		t = pick_forks(philosopher->table);
 		if (t)
@@ -67,8 +68,6 @@ void	start_philosopher(t_philo	*philosopher)
 	undo_child_table(philosopher->table);
 	exit(EXIT_SUCCESS);
 }
-
-
 
 int	main(int argc, char *argv[])
 {

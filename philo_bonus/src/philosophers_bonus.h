@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 15:18:15 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/30 17:12:30 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/30 21:37:14 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ struct s_table
 	sem_t			*hands_lock;
 	sem_t			*simulation;
 	sem_t			*simulation_lock;
+	sem_t			*die_lock;
 	t_philo			philosopher;
 	t_proc			*procs;
 	struct timeval	base_time;
@@ -75,7 +76,7 @@ void				parse_params(int argc, char *argv[], unsigned int *i_args);
 void				init_semaphores(t_table *table);
 void				destroy_semaphores(t_table *table);
 void				close_semaphores(t_table *table);
-void				unlink_semaphores();
+void				unlink_semaphores(void);
 void				set_up_table(t_table *table, unsigned int *args);
 void				undo_table(t_table	*table);
 void				undo_child_table(t_table *table);
@@ -93,4 +94,6 @@ int					simulating(t_table *table);
 void				end_simulation(t_table *table);
 int					starved_to_death(t_table *table);
 int					is_alive(t_table *table);
+int					is_full(t_table *table);
+int					try_wait(sem_t *sem, t_table *table);
 #endif

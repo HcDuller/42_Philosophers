@@ -6,7 +6,7 @@
 /*   By: hde-camp <hde-camp@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 23:59:15 by hde-camp          #+#    #+#             */
-/*   Updated: 2022/03/30 16:49:33 by hde-camp         ###   ########.fr       */
+/*   Updated: 2022/03/30 21:37:00 by hde-camp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	set_up_table(t_table *table, unsigned int *args)
 	table->procs = ft_calloc(args[0], sizeof(t_proc));
 	table->philosopher.table = table;
 	table->philosopher.alive = 1;
+	table->philosopher.meals_left = (int)args[4];
 	gettimeofday(&table->base_time, NULL);
 	table->philosopher.last_meal = table->base_time;
 	pthread_mutex_init(&table->philosopher.self_lock, NULL);
